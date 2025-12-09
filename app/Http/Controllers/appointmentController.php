@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class CitasController extends Controller
+class appointmentController extends Controller
 {
     /**
      * Display a listing of the resource.

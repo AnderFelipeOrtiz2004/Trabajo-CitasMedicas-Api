@@ -11,8 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('citas_medicas', function (Blueprint $table) {
+        Schema::create('appointments', function (Blueprint $table) {
             $table->id();
+            $table->string('patient_name');
+            $table->string('doctor_name');
+            $table->date('date');
+            $table->time('time');
+            $table->text('reason')->nullable();
+            $table->enum('status', ['Pendiente', 'Realizada', 'Cancelada'])->default('Pendiente');
             $table->timestamps();
         });
     }
@@ -22,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('citas_medicas');
+        Schema::dropIfExists('appointments');
     }
 };
