@@ -2,24 +2,31 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Appointment;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
-class appointmentController extends Controller
+class AppointmentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $appointments = Appointment::all();
+        return response()->json($appointments, 200);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+                'patient_name' => 'required|string|max:255',
+                'doctor_name' => 'required|string|max:255',
+                'date' => 'required|date',
+                'time' => 'required|date_format:H:i',
+                'reason' => 'required|string',
+                'status' => 'sometimes|string|in:Pendiente,Realizada,Cancelada'
+            ]);
+
+        $appointment = Appointment::create($data);
+        return response()->json($appointment, 201);
     }
 
     /**
@@ -27,22 +34,34 @@ class appointmentController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $appointment = Appointment::findOrFail($id);
+        return response()->json($appointment, 200);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
-        //
+        $appointment = Appointment::findOrFail($id);
+            
+        $validated = $request->validate([
+            'patient_name' => 'required|string|max:255',
+            'doctor_name' => 'required|string|max:255',
+            'date' => 'required|date',
+            'time' => 'required|date_format:H:i',
+            'reason' => 'required|string',
+            'status' => 'sometimes|string|in:Pendiente,Realizada,Cancelada'
+        ]);
+
+        $appointment->update($validated);
+        return response()->json($appointment, 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
-        //
-    }
+    $appointment = Appointment::findOrFail($id);
+    $appointment->delete();
+            
+    return response()->json([
+        'message' => 'Cita eliminada correctamente.'
+    ], 200);
+}
 }
